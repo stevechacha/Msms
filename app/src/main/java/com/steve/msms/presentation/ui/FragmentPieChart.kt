@@ -43,6 +43,7 @@ import dagger.hilt.android.scopes.ActivityScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.io.File
 
 @AndroidEntryPoint
@@ -55,6 +56,7 @@ class FragmentPieChart : Fragment(R.layout.fragment_pie_chart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Timber.i("FragmentPieChart Launched")
 
         setHasOptionsMenu(true)
 

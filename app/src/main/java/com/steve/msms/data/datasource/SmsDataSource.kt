@@ -10,7 +10,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.regex.Pattern
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,7 +30,12 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
 
         while (cursor != null && cursor.moveToNext()) {
 
-            val smsDate = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.DATE))
+            val smsDate = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.DATE)).toLong()
+            val date = Date()
+            date.time =smsDate
+            val simpleDateFormat = SimpleDateFormat("dd/MM/yyyy")
+            val dateString = simpleDateFormat.format(date)
+
             val number = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
             val body = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.BODY))
             val id = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms._ID))
@@ -41,7 +45,7 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
                 Message(
                     number,
                     body,
-                    smsDate ,
+                    dateString ,
                     id
                 )
             )
@@ -59,7 +63,7 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
             debitAmount
         )
 
-        val mFile = CsvUtils.toCsvFile(context, messageList, "messages_data")
+        val mFile = CsvUtils.toCsvFile(context, messageList, "message_data")
         Timber.i("File Exists: ${mFile.exists()}")
 
 

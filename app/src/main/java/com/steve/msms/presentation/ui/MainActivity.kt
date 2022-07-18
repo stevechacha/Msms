@@ -11,6 +11,7 @@ import com.steve.msms.utils.Event
 import com.steve.msms.utils.EventObject
 import com.steve.msms.utils.SMS_PERMISSION_REQUEST
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -19,8 +20,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Timber.i("MainActivity Launched")
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
     }
 
     override fun onRequestPermissionsResult(

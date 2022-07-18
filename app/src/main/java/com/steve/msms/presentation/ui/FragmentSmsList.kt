@@ -15,6 +15,7 @@ import com.steve.msms.presentation.adapter.MessageAdapter
 import com.steve.msms.presentation.ui.AddTagModalSheet
 import com.steve.msms.presentation.viewmodel.FragmentListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -24,6 +25,8 @@ class FragmentSmsList : Fragment(R.layout.fragment_sms_list) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        
+        Timber.i("FragmentList Launched")
 
         binding = FragmentSmsListBinding.bind(view)
 
