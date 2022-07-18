@@ -56,7 +56,7 @@ class FragmentPieChart : Fragment(R.layout.fragment_pie_chart) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Timber.i("FragmentPieChart Launched")
+        Timber.i("The user in Loan Application")
 
         setHasOptionsMenu(true)
 

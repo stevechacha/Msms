@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Stephen/AndroidStudioProjects/Msms/app/src/main/res/layout/activity_login.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Stephen/AndroidStudioProjects/Msms/app/src/main/res/layout/activity_sign_up.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Stephen/AndroidStudioProjects/Msms/app/src/main/res/layout/fragment_pie_chart.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/action_search.xml" value="0.1135" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />

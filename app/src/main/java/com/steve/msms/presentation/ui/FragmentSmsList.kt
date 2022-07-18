@@ -26,7 +26,7 @@ class FragmentSmsList : Fragment(R.layout.fragment_sms_list) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        Timber.i("FragmentList Launched")
+        Timber.i("The user is in Sms ")
 
         binding = FragmentSmsListBinding.bind(view)
 

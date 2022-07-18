@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Timber.i("MainActivity Launched")
+        Timber.i("The User accepted the Terms the sms Read consent")
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
