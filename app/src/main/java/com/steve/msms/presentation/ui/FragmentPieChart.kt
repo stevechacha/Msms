@@ -98,6 +98,10 @@ class FragmentPieChart : Fragment(R.layout.fragment_pie_chart) {
     private fun getMessages() {
                 lifecycleScope.launch {
                     viewModel.sms.observe(viewLifecycleOwner, Observer {
+
+
+
+
 //                        if (it != null) {
 //                           // setPie(it)
           //                 smsData = it

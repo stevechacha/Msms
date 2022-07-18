@@ -7,11 +7,16 @@ import com.steve.msms.data.csv.CsvUtils
 import com.steve.msms.domain.model.Message
 import com.steve.msms.domain.model.SmsData
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import timber.log.Timber
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.system.measureTimeMillis
 
 
 @Singleton
@@ -37,7 +42,7 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
             val dateString = simpleDateFormat.format(date)
 
             val number = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.ADDRESS))
-            val body = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.BODY))
+            val body = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms.BODY)).toString()
             val id = cursor.getString(cursor.getColumnIndexOrThrow(Telephony.Sms._ID))
 
 
@@ -63,21 +68,25 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
             debitAmount
         )
 
-        val mFile = CsvUtils.toCsvFile(context, messageList, "message_data")
-        Timber.i("File Exists: ${mFile.exists()}")
+        GlobalScope.launch(Dispatchers.IO) {
+            val mFile = CsvUtils.toCsvFile(context, messageList, "messagess")
+            Timber.i("File Exists: ${mFile.exists()}")
+
+        }
+
 
 
     }
 
     private fun checkIfMessageIsTransactional(message: Message) {
-        val messageList = arrayListOf<Message>()
 
-        val instution_id = listOf("MPESA","EQUITY","TELKOM",)
+//        runBlocking {
+//            val messagee = arrayListOf<Message>()
+//            val mFile = CsvUtils.toCsvFile(context, messagee, "meseresg")
+//            Timber.i("File Exists: ${mFile.exists()}")
+//
+//        }
 
-        if (message.number in instution_id){
-
-            print(message)
-        }
 
 
     }

@@ -11,6 +11,7 @@ interface SmsAPI {
         @Body user: User
     )
 
+
     @POST("/logs")
     suspend fun postMessage(
         @Body message: Message
