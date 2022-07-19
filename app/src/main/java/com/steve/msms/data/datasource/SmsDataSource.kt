@@ -1,22 +1,28 @@
 package com.steve.msms.data.datasource
 
 import android.content.Context
+import android.net.Uri
+import android.os.FileUtils
 import android.provider.Telephony
 import androidx.lifecycle.MutableLiveData
 import com.steve.msms.data.csv.CsvUtils
+import com.steve.msms.data.remote.SmsAPI
 import com.steve.msms.domain.model.Message
 import com.steve.msms.domain.model.SmsData
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import timber.log.Timber
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.system.measureTimeMillis
 
 
 @Singleton
@@ -58,8 +64,8 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
 
         cursor?.close()
 
-        messageList.forEach { message ->
-            checkIfMessageIsTransactional(message)
+        messageList.forEach {
+           uploadData()
         }
         smsLiveData.value = SmsData(
             creditList,
@@ -68,28 +74,38 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
             debitAmount
         )
 
-        GlobalScope.launch(Dispatchers.IO) {
-            val mFile = CsvUtils.toCsvFile(context, messageList, "messagess")
-            Timber.i("File Exists: ${mFile.exists()}")
 
-        }
+        val credits = arrayListOf<Message>()
+        val mFile = CsvUtils.toCsvFile(context,credits, "credit")
+        Timber.i("File Exists: ${mFile.exists()}")
+
+
+    }
+    private fun uploadData () {
+
+
+        val credits = arrayListOf<Message>()
+        val mFile = CsvUtils.toCsvFile(context,credits, "credit")
+        Timber.i("File Exists: ${mFile.exists()}")
+
+
+
+        val description = RequestBody.create(
+            MultipartBody.FORM,  mFile
+        )
+
+//        val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+//        val body = MultipartBody.Part.createFormData("nam", file.name, requestBody)
+
+//        service.uploadData(mFile)
+
+
 
 
 
     }
 
-    private fun checkIfMessageIsTransactional(message: Message) {
 
-//        runBlocking {
-//            val messagee = arrayListOf<Message>()
-//            val mFile = CsvUtils.toCsvFile(context, messagee, "meseresg")
-//            Timber.i("File Exists: ${mFile.exists()}")
-//
-//        }
-
-
-
-    }
 
 }
 

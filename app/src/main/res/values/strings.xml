@@ -14,4 +14,13 @@
     <string name="edit_tag">Edit Tag</string>
     <string name="transaction_summary">Transaction Summary</string>
     <string name="go_back">Go Back</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="register">Register</string>
+    <string name="create_account">Create account</string>
+    <string name="phone_number_prefix">254</string>
 </resources>
