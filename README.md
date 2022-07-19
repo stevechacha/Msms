@@ -1,4 +1,4 @@
-# Msms
+# Credit Scoring
 
 The app reads the sms for te user the analyses for credit score
 
