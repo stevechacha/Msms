@@ -7,5 +7,6 @@ The app reads the sms for te user the analyses for credit score
 2. Login the user
 3. User Allow Read sms ( Done )
 4. The User data sent to Api via Shareprefrence/DataStore after allowing read sms( Not Done)
-5. The file created in Csv sent to api for analysis ( Not Done )
+5. The file created in Csv sent to api for analysis ( Sent to API Not Done )
 6. Moniter system log and information for use of the customer ( Done)
+7. After the analysis the User can apply the loan with a limit given after reviewing the finance sms.
