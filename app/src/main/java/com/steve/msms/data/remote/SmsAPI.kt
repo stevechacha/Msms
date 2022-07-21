@@ -21,6 +21,6 @@ interface SmsAPI {
     @Multipart
     @POST("/logs")
     suspend fun upload(
-        @Part file: RequestBody
-    ): ResponseBody
+        @Part file: MultipartBody.Part?
+    ): Response<Any>
 }
