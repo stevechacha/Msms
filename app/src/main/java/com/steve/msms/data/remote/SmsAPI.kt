@@ -14,13 +14,13 @@ interface SmsAPI {
 
     @Multipart
     @POST("/log")
-    suspend fun uploaadSms(
-        @Part part: MultipartBody.Part
+    suspend fun uploadSms(
+        @Part part: String
     ) : ResponseBody
 
     @Multipart
     @POST("/logs")
     suspend fun upload(
-        @Part file: Part?
+        @Part file: RequestBody
     ): ResponseBody
 }

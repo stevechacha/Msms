@@ -1,22 +1,42 @@
 package com.steve.msms.presentation.ui
 
+import android.app.ListActivity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.edit
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
 import com.google.gson.annotations.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.steve.msms.BuildConfig
 import com.steve.msms.R
+import com.steve.msms.data.csv.CsvUtils
 import com.steve.msms.databinding.ActivitySignUpBinding
+import com.steve.msms.domain.model.Message
 import com.steve.msms.domain.model.User
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.*
 
+@AndroidEntryPoint
 class SignUpActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignUpBinding
     lateinit var mAuth: FirebaseAuth
+    lateinit var mStorage: FirebaseStorage
+
+    private var database: FirebaseDatabase = FirebaseDatabase.getInstance("https://msms-81a20-default-rtdb.firebaseio.com/")
+    private var logRef: DatabaseReference = database.getReference("steve")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +47,9 @@ class SignUpActivity : AppCompatActivity() {
 
         mAuth = FirebaseAuth.getInstance()
 
+
         binding.btnReg.setOnClickListener {
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-//            RegisterUser()
+            RegisterUser()
        }
 
     }
@@ -39,14 +58,15 @@ class SignUpActivity : AppCompatActivity() {
         val firstName = binding.firstName.text.toString()
         val lastName = binding.lastName.text.toString()
         val email = binding.registerEmail.text.toString().trim()
-        val phoneNumber = binding.phoneNo.text.toString().toString()
+        val phoneNumber = binding.phoneNo.text.toString().trim()
+        val password = binding.passwordReg.text.toString().trim()
 
-        val userInfo = User(
-            firstName,
-            lastName,
-            email,
-            getString(R.string.phone_number_prefix) + phoneNumber
-        )
+//        val userInfo = User(
+//            firstName,
+//            lastName,
+//            email,
+//            getString(R.string.phone_number_prefix) + phoneNumber
+//        )
 
 //        val moshi = Moshi.Builder().build()
 //        val jsonAdapter: JsonAdapter<User> = moshi.adapter(User::class.java)
@@ -59,46 +79,39 @@ class SignUpActivity : AppCompatActivity() {
 //        }
 
 
-//        if (email.isNotEmpty() && lastName.isNotEmpty()
-//            && phoneNumber.isNotEmpty() && firstName.isNotEmpty() ){
-//
-//            //use courotines
-//            CoroutineScope(Dispatchers.IO).launch {
-//                try {
-//                    mAuth.createUserWithEmailAndPassword(email,password).isSuccessful
-//                    withContext(Dispatchers.Main){
-//                        checkLoggedInState()
-//
-//                    }
-//
-//                }catch(e: Exception){
-//                    withContext(Dispatchers.Main){
-//                        Toast.makeText(this@SignUpActivity,e.message, Toast.LENGTH_LONG).show()
-//                    }
-//
-//                }
-//            }
-//
-//        }
+        if (email.isNotEmpty() && lastName.isNotEmpty()
+            && phoneNumber.isNotEmpty() && firstName.isNotEmpty() ){
 
+            //use courotines
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    mAuth.createUserWithEmailAndPassword(email,password).isSuccessful
+                    withContext(Dispatchers.Main){
 
-    }
+                        uploadData()
 
-    private fun checkLoggedInState() {
+                        val intent = Intent(this@SignUpActivity, MainActivity::class.java)
+                        startActivity(intent)
 
-        if (mAuth.currentUser==null){
+                    }
 
-            Toast.makeText(this@SignUpActivity,"You are Not Logged In", Toast.LENGTH_LONG).show()
+                }catch(e: Exception){
+                    withContext(Dispatchers.Main){
+                        Toast.makeText(this@SignUpActivity,e.message, Toast.LENGTH_LONG).show()
+                    }
 
-        } else{
-            Toast.makeText(this@SignUpActivity,"You are Logged In", Toast.LENGTH_LONG).show()
-
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
+                }
+            }
 
         }
 
+
     }
+
+    private fun uploadData() {
+
+    }
+
 
 }
 

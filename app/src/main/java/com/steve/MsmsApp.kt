@@ -1,13 +1,14 @@
 package com.steve
 
 import android.app.Application
-import android.text.format.DateFormat.format
+import android.content.Context
 import android.util.Log
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.steve.msms.data.csv.CsvUtils
+import com.steve.msms.domain.model.Message
 import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
-import java.lang.String.format
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -43,6 +44,8 @@ class RemoteLogsTree: Timber.Tree(){
         val dateFormat: DateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
         val date = Date()
         val strDate: String = dateFormat.format(date).toString()
+        val messageList = arrayListOf<Message>()
+
 
         logRef.child("$strDate" + "").setValue("Level: $level ,Tag: $tag, Message: $message")
 
